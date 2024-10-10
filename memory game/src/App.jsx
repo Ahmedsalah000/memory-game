@@ -130,7 +130,7 @@ function App() {
       <div className="mb-4 text-xl font-bold">الوقت المتبقي: {timer} ثانية</div>
       {gameOver && (
         <div className="mb-4 text-xl font-bold">
-          {matchedCards.length === cards.length ? "مبروك  كسبت " : "انتهى الوقت! حاول تجيص  مرة أخرى."}
+          {matchedCards.length === cards.length ? "مبروك  يافالح " : "انتهى الوقت! حاول تجيص  مرة أخرى."}
         </div>
       )}
       <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl w-full">
