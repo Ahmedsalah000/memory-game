@@ -2,24 +2,19 @@ import { useState, useEffect } from 'react'
 import './App.css'
 
 import img1 from './assets/1.jpg'
-import sound1 from './assets/f10.mp3'
 import img2 from './assets/2.jpg'
-import sound2 from './assets/f1.mp3'
 import img3 from './assets/3.jpg'
-import sound3 from './assets/f7.mp3'
 import img4 from './assets/4.jpg'
-import sound4 from './assets/f3.mp3'
 import img5 from './assets/5.jpg'
-import sound5 from './assets/f2.mp3'
 import img6 from './assets/6.jpg'
-import sound6 from './assets/f4.mp3'
 import img7 from './assets/7.jpg'
-import sound7 from './assets/f5.mp3'
 import img8 from './assets/8.jpg'
-import sound8 from './assets/f6.mp3'
+import img9 from './assets/9.jpg'
+import img10 from './assets/10.jpg'
 
-
-import flipSound from './assets/flipcard-91468.mp3'
+import cardBackImage from './assets/b.jpeg' 
+import flipSound from './assets/good morning.mp3'     
+import mismatchSound from './assets/b.mp3'     
 import matchSound from './assets/515095-Computer_sound-Menu-Success.wav'
 import startGameSound from './assets/start.mp3'
 import successSound from './assets/success.mp3'
@@ -34,6 +29,7 @@ function App() {
   const [gameOver, setGameOver] = useState(false)
 
   const flipAudio = new Audio(flipSound)
+  const mismatchAudio = new Audio(mismatchSound)
   const matchAudio = new Audio(matchSound)
   const startAudio = new Audio(startGameSound)
   const successAudio = new Audio(successSound)
@@ -41,14 +37,16 @@ function App() {
 
   useEffect(() => {
     const cardData = [
-      { image: img1, sound: new Audio(sound1) },
-      { image: img2, sound: new Audio(sound2) },
-      { image: img3, sound: new Audio(sound3) },
-      { image: img4, sound: new Audio(sound4) },
-      { image: img5, sound: new Audio(sound5) },
-      { image: img6, sound: new Audio(sound6) },
-      { image: img7, sound: new Audio(sound7) },
-      { image: img8, sound: new Audio(sound8) },
+      { image: img1 },
+      { image: img2 },
+      { image: img3 },
+      { image: img4 },
+      { image: img5 },
+      { image: img6 },
+      { image: img7 },
+      { image: img8 },
+      { image: img9 },
+      { image: img10 },
     ]
     const shuffledCards = [...cardData, ...cardData]
       .sort(() => Math.random() - 0.5)
@@ -79,10 +77,9 @@ function App() {
   const handleCardClick = (id) => {
     if (flippedCards.length === 2 || flippedCards.includes(id) || matchedCards.includes(id) || gameOver) return;
 
-    flipAudio.play()
-
-    const clickedCard = cards.find(card => card.id === id)
-    clickedCard.sound.play()
+    if (flippedCards.length === 0) {
+      flipAudio.play()       
+    }
 
     const newFlippedCards = [...flippedCards, id];
     setFlippedCards(newFlippedCards);
@@ -93,8 +90,12 @@ function App() {
       const secondCard = cards.find(card => card.id === secondCardId);
 
       if (firstCard.image === secondCard.image) {
-        matchAudio.play()
+        matchAudio.play()  
         setMatchedCards([...matchedCards, firstCardId, secondCardId]);
+      } else {
+        setTimeout(() => {
+          mismatchAudio.play()  
+        }, 500)  
       }
 
       setTimeout(() => setFlippedCards([]), 1000);
@@ -130,20 +131,28 @@ function App() {
       <div className="mb-4 text-xl font-bold">الوقت المتبقي: {timer} ثانية</div>
       {gameOver && (
         <div className="mb-4 text-xl font-bold">
-          {matchedCards.length === cards.length ? "مبروك  يافالح " : "انتهى الوقت! حاول تجيص  مرة أخرى."}
+          {matchedCards.length === cards.length ? "مبروك  يافالح " : "انتهى الوقت! جرب تاني يأخي أنت خسران حاجة."}
         </div>
       )}
       <div className="grid grid-cols-4 gap-2 sm:gap-4 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl w-full">
         {cards.map(card => (
           <div
             key={card.id}
-            className={`aspect-square bg-blue-500 flex items-center justify-center cursor-pointer rounded-lg shadow-md transition-all duration-300 overflow-hidden
-              ${(flippedCards.includes(card.id) || matchedCards.includes(card.id)) ? 'bg-white' : ''}`}
+            className={`aspect-square flex items-center justify-center cursor-pointer rounded-lg shadow-md transition-all duration-300 overflow-hidden relative`}
             onClick={() => handleCardClick(card.id)}
           >
-            {(flippedCards.includes(card.id) || matchedCards.includes(card.id)) && (
-              <img src={card.image} alt="صورة البطاقة" className="w-full h-full object-cover" />
-            )}
+            <img 
+              src={card.image}
+              alt="صورة البطاقة"
+              className={`w-full h-full object-cover transition-opacity duration-300
+                ${(flippedCards.includes(card.id) || matchedCards.includes(card.id)) ? 'opacity-100' : 'opacity-0'}`}
+            />
+            <img 
+              src={cardBackImage}
+              alt="خلفية البطاقة"
+              className={`w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-300
+                ${(flippedCards.includes(card.id) || matchedCards.includes(card.id)) ? 'opacity-0' : 'opacity-70'}`}
+            />
           </div>
         ))}
       </div>
