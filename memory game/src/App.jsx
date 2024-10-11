@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import './App.css'
 
 import img1 from './assets/1.jpg'
@@ -35,7 +35,7 @@ function App() {
   const successAudio = new Audio(successSound)
   const failureAudio = new Audio(failureSound)
 
-  useEffect(() => {
+  const shuffleCards = useCallback(() => {
     const cardData = [
       { image: img1 },
       { image: img2 },
@@ -53,6 +53,10 @@ function App() {
       .map((card, index) => ({ id: index, ...card, isFlipped: false }))
     setCards(shuffledCards)
   }, [])
+
+  useEffect(() => {
+    shuffleCards()
+  }, [shuffleCards])
 
   useEffect(() => {
     let interval
@@ -109,6 +113,7 @@ function App() {
     setGameOver(false)
     setMatchedCards([])
     setFlippedCards([])
+    shuffleCards() // إضافة هذا السطر
   }
 
   if (!gameStarted) {
