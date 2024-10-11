@@ -113,7 +113,7 @@ function App() {
     setGameOver(false)
     setMatchedCards([])
     setFlippedCards([])
-    shuffleCards() // إضافة هذا السطر
+    shuffleCards() 
   }
 
   if (!gameStarted) {
